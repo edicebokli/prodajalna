@@ -198,6 +198,7 @@ var vrniRacune = function(callback) {
 // Registracija novega uporabnika
 streznik.post('/prijava', function(zahteva, odgovor) {
   var form = new formidable.IncomingForm();
+  console.log("fk ois");
   
   form.parse(zahteva, function (napaka1, polja, datoteke) {
     var napaka2 = false;
@@ -209,13 +210,18 @@ streznik.post('/prijava', function(zahteva, odgovor) {
     	  Phone, Fax, Email, SupportRepId) \
         VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
       //TODO: add fields and finalize
-      //stmt.run("", "", "", "", "", "", "", "", "", "", "", 3); 
-      //stmt.finalize();
+      //stmt.run(document.getElementById("FirstName").innerHTML, document.getElementById("LastName").innerHTML, document.getElementById("Company").innerHTML, document.getElementById("Address").innerHTML, document.getElementById("City").innerHTML, document.getElementById("State").innerHTML, document.getElementById("Country").innerHTML, document.getElementById("PostalCode").innerHTML, document.getElementById("Phone").innerHTML, document.getElementById("Fax").innerHTML, document.getElementById("Email").innerHTML, 3);
+      //stmt.run(document.getElementById("FirstName").innerHTML, "stranke: #LastName.input.value", "stranke: Company", "stranke: Address", "stranke: City", "stranke: State", "stranke: Country", "stranke: PostalCode", "stranke: Phone", "stranke: Fax", "stranke: Email", 3); 
+      stmt.run(polja.FirstName,polja.LastName,polja.Company,polja.Address,polja.City,polja.State,polja.Country,polja.PostalCode,polja.Phone, polja.Fax,polja.Email,3);
+      //stmt.finalize(polja.FirstName,polja.LastName,polja.Company,polja.Address,polja.City,polja.State,polja.Country,polja.PostalCode,polja.Phone, polja.Fax,polja.Email);
+      stmt.finalize();
+      
     } catch (err) {
       napaka2 = true;
     }
   
     odgovor.end();
+    
   });
 })
 
