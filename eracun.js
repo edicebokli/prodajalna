@@ -198,7 +198,7 @@ var vrniRacune = function(callback) {
 // Registracija novega uporabnika
 streznik.post('/prijava', function(zahteva, odgovor) {
   var form = new formidable.IncomingForm();
-  console.log("fk ois");
+  
   
   form.parse(zahteva, function (napaka1, polja, datoteke) {
     var napaka2 = false;
@@ -216,10 +216,11 @@ streznik.post('/prijava', function(zahteva, odgovor) {
       //stmt.finalize(polja.FirstName,polja.LastName,polja.Company,polja.Address,polja.City,polja.State,polja.Country,polja.PostalCode,polja.Phone, polja.Fax,polja.Email);
       stmt.finalize();
       
+      
     } catch (err) {
       napaka2 = true;
     }
-  
+    odgovor.redirect('/prijava'); 
     odgovor.end();
     
   });
