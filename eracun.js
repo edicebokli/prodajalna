@@ -20,9 +20,11 @@ streznik.use(
     secret: '1234567890QWERTY', // Skrivni ključ za podpisovanje piškotkov
     saveUninitialized: true,    // Novo sejo shranimo
     resave: false,              // Ne zahtevamo ponovnega shranjevanja
+    racunId:null,
     cookie: {
       maxAge: 3600000           // Seja poteče po 60min neaktivnosti
     }
+    
   })
 );
 
@@ -152,15 +154,10 @@ var strankaIzRacuna = function(racunId, callback) {
 
 // Izpis računa v HTML predstavitvi na podlagi podatkov iz baze
 streznik.post('/izpisiRacunBaza', function(zahteva, odgovor) {
-  var racunId = 199;
   var form = new formidable.IncomingForm();
-  
   form.parse(zahteva, function (napaka1, polja, datoteke) {
-    racunId = polja.seznamRacunov;
-    console.log(polja);
-  });
-  
-  strankaIzRacuna(racunId, function(stranka) {
+    var racunId = polja.seznamRacunov;
+    strankaIzRacuna(racunId, function(stranka) {
     pesmiIzRacuna(racunId, function(pesmi) {
         if (!pesmi) {
         odgovor.sendStatus(500);
@@ -178,6 +175,9 @@ streznik.post('/izpisiRacunBaza', function(zahteva, odgovor) {
       } 
       })
   })
+  });
+  
+  
     
 })
 
