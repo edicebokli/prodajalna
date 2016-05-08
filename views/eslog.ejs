@@ -174,29 +174,29 @@
 			<NazivNaslovPodjetja>
 				<VrstaPartnerja>BY</VrstaPartnerja>
 				<NazivPartnerja>
-					<NazivPartnerja1><%-postavkeStranke[0].FirstName +" "+postavkeStranke[0].LastName+" "%></NazivPartnerja1>
-					<NazivPartnerja2><%=postavkeStranke[0].Company%></NazivPartnerja2>
+					<NazivPartnerja1><%=stranke[0].FirstName +" "+stranke[0].LastName+" "%></NazivPartnerja1>
+					<NazivPartnerja2><%=stranke[0].Company%></NazivPartnerja2>
 					
 				</NazivPartnerja>
 				<Ulica>
-					<Ulica1><%=postavkeStranke[0].Address%></Ulica1>
+					<Ulica1><%=stranke[0].Address%></Ulica1>
 					
 				</Ulica>
-				<Kraj><%=postavkeStranke[0].City%></Kraj>
-				<NazivDrzave><%=postavkeStranke[0].Country%></NazivDrzave>
-				<PostnaStevilka><%=postavkeStranke[0].PostalCode%></PostnaStevilka>
+				<Kraj><%=stranke[0].City%></Kraj>
+				<NazivDrzave><%=stranke[0].Country%></NazivDrzave>
+				<PostnaStevilka><%=stranke[0].PostalCode%></PostnaStevilka>
 				
 			</NazivNaslovPodjetja>
 			<KontaktiPodjetja>
 				<KontaktnaOseba>
-					<ImeOsebe><%=postavkeStranke[0].FirstName +" "+ postavkeStranke[0].LastName +" ("+postavkeStranke[0].Email+")" %></ImeOsebe>
+					<ImeOsebe><%=stranke[0].FirstName +" "+ stranke[0].LastName +" ("+stranke[0].Email+")" %></ImeOsebe>
 				</KontaktnaOseba>
 				<Komunikacije>
-					<StevilkaKomunikacije><%=postavkeStranke[0].Phone%></StevilkaKomunikacije>
+					<StevilkaKomunikacije><%=stranke[0].Phone%></StevilkaKomunikacije>
 					<VrstaKomunikacije>TE</VrstaKomunikacije>
 				</Komunikacije>
 				<Komunikacije>
-					<StevilkaKomunikacije><%=postavkeStranke[0].Fax%></StevilkaKomunikacije>
+					<StevilkaKomunikacije><%=stranke[0].Fax%></StevilkaKomunikacije>
 					<VrstaKomunikacije>FX</VrstaKomunikacije>
 				</Komunikacije>
 			</KontaktiPodjetja>

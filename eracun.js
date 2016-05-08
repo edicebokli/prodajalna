@@ -10,6 +10,8 @@ var sqlite3 = require('sqlite3').verbose();
 var pb = new sqlite3.Database('chinook.sl3');
 
 // Priprava strežnika
+
+
 var express = require('express');
 var expressSession = require('express-session');
 var streznik = express();
@@ -20,7 +22,6 @@ streznik.use(
     secret: '1234567890QWERTY', // Skrivni ključ za podpisovanje piškotkov
     saveUninitialized: true,    // Novo sejo shranimo
     resave: false,              // Ne zahtevamo ponovnega shranjevanja
-    racunId:null,
     cookie: {
       maxAge: 3600000           // Seja poteče po 60min neaktivnosti
     }
@@ -29,6 +30,7 @@ streznik.use(
 );
 
 var razmerje_usd_eur = 0.877039116;
+var strankaId = 10;
 
 function davcnaStopnja(izvajalec, zanr) {
   switch (izvajalec) {
@@ -68,12 +70,14 @@ streznik.get('/', function(zahteva, odgovor) {
     if (napaka)
       odgovor.sendStatus(500);
     else {
+        
         for (var i=0; i<vrstice.length; i++)
           vrstice[i].stopnja = davcnaStopnja(vrstice[i].izvajalec, vrstice[i].zanr);
         odgovor.render('seznam', {seznamPesmi: vrstice});
       }
   
   })
+
 }})
 
 // Dodajanje oz. brisanje pesmi iz košarice
@@ -155,6 +159,14 @@ var strankaIzRacuna = function(racunId, callback) {
       callback(vrstice);
     })
 }
+var strankaIzPrijave = function(strankaId, callback) {
+    pb.all("SELECT Customer.* FROM Customer, Invoice \
+            WHERE Customer.CustomerId = " + strankaId,
+    function(napaka, vrstice) {
+      console.log(vrstice);
+      callback(vrstice);
+    })
+}
 
 // Izpis računa v HTML predstavitvi na podlagi podatkov iz baze
 streznik.post('/izpisiRacunBaza', function(zahteva, odgovor) {
@@ -173,7 +185,7 @@ streznik.post('/izpisiRacunBaza', function(zahteva, odgovor) {
         odgovor.render('eslog', {
           vizualiziraj: true,
           postavkeRacuna: pesmi,
-          postavkeStranke: stranka
+          stranke: stranka
           
         })  
       } 
@@ -187,20 +199,24 @@ streznik.post('/izpisiRacunBaza', function(zahteva, odgovor) {
 
 // Izpis računa v HTML predstavitvi ali izvorni XML obliki
 streznik.get('/izpisiRacun/:oblika', function(zahteva, odgovor) {
-  pesmiIzKosarice(zahteva, function(pesmi) {
-    if (!pesmi) {
-      odgovor.sendStatus(500);
-    } else if (pesmi.length == 0) {
-      odgovor.send("<p>V košarici nimate nobene pesmi, \
-        zato računa ni mogoče pripraviti!</p>");
-    } else {
-      odgovor.setHeader('content-type', 'text/xml');
-      odgovor.render('eslog', {
-        vizualiziraj: zahteva.params.oblika == 'html' ? true : false,
-        postavkeRacuna: pesmi
-      })  
-    }
+    strankaIzPrijave(strankaId, function(stranka){
+    pesmiIzKosarice(zahteva, function(pesmi) {
+      if (!pesmi) {
+        odgovor.sendStatus(500);
+      } else if (pesmi.length == 0) {
+        odgovor.send("<p>V košarici nimate nobene pesmi, \
+          zato računa ni mogoče pripraviti!</p>");
+      } else {
+        odgovor.setHeader('content-type', 'text/xml');
+        odgovor.render('eslog', {
+          vizualiziraj: zahteva.params.oblika == 'html' ? true : false,
+          postavkeRacuna: pesmi,
+          stranke: stranka
+        })  
+      }
+    })
   })
+  
 })
 
 // Privzeto izpiši račun v HTML obliki
@@ -285,6 +301,7 @@ streznik.post('/stranka', function(zahteva, odgovor) {
   
   form.parse(zahteva, function (napaka1, polja, datoteke) {
     i=1;
+    strankaId = polja.seznamStrank;
     odgovor.redirect('/')
     
   });
